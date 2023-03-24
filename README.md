@@ -4,7 +4,7 @@
 ### The aim of the project is to create an interactive map of pjatk that would help first year students to navigate the area of the academy.
 
 Authors:  
-- s25706 - Lev Koliadich (backend/coding guru) \n
+- s25706 - Lev Koliadich (backend/coding guru)
 - s24900 - Kim Leonid (frontend/rookie)
 
 Functionality to be iplemented (so far):
