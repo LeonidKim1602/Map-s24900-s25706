@@ -1,17 +1,18 @@
 # PythonProject-s24900-s25706
-Interactive Map of PJATK
+## Interactive Map of PJATK
 
-The aim of the project is to create an interactive map of pjatk that would help first year students to navigate the area of the academy.
+### The aim of the project is to create an interactive map of pjatk that would help first year students to navigate the area of the academy.
 
-Authors:  s25706 - Lev Koliadich (backend/coding guru)
-          s24900 - Kim Leonid (frontend/rookie)
+Authors:  
+- s25706 - Lev Koliadich (backend/coding guru) \n
+- s24900 - Kim Leonid (frontend/rookie)
 
 Functionality to be iplemented (so far):
-1)Opening and viewing maps of every floor in Bulding A and Building B (probably .svg files);
-2)Logging in with "S" number and password;
-3)Adding schedule manually, while logged in as a student;
-4)Viewing classrooms on the map, repesented as red dots, according to personal schedule;
-5*)Adding points of interest available to everyone, who visits the website (onigiri stand on the first floor, cafeteria, coffee stand in Building A, companies' whereabouts during job fairs etc.);
-6*)Adding schedule automatically if group number is provided;
+1. Opening and viewing maps of every floor in Bulding A and Building B (probably .svg files);
+2. Logging in with "S" number and password;
+3. Adding schedule manually, while logged in as a student;
+4. Viewing classrooms on the map, repesented as red dots, according to personal schedule;
+5. [^1] Adding points of interest available to everyone, who visits the website (onigiri stand on the first floor, cafeteria, coffee stand in Building A, companies' whereabouts during job fairs etc.);
+6. [^1] Adding schedule automatically if group number is provided;
 
-* - optional, we'll see how it goes :)
+[^1]: - optional, we'll see how it goes :)
