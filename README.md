@@ -5,7 +5,7 @@
 
 Authors:  
 - s25706 - Lev Koliadich (backend/coding guru)
-- s24900 - Kim Leonid (frontend/rookie)
+- s24900 - Leonid Kim (frontend/rookie)
 
 Functionality to be iplemented (so far):
 1. Opening and viewing maps of every floor in Bulding A and Building B (probably .svg files);
