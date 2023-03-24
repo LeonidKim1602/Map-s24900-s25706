@@ -7,7 +7,7 @@ Authors:
 - s25706 - Lev Koliadich (backend/coding guru)
 - s24900 - Leonid Kim (frontend/rookie)
 
-Functionality to be iplemented (so far):
+Functionalities to be implemented (so far):
 1. Opening and viewing maps of every floor in Bulding A and Building B (probably .svg files);
 2. Logging in with "S" number and password;
 3. Adding schedule manually, while logged in as a student;
