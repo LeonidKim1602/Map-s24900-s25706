@@ -7,7 +7,7 @@ Authors:
 - s25706 - Lev Koliadich (backend/coding guru)
 - s24900 - Leonid Kim (frontend/rookie)
 
-Valuable feedback provider/tutor/el numero uno:
+Valuable feedback provider/tutor/el numero uno/The Boss:
 - Illia Shkroba
 
 Functionalities to be implemented (so far):
