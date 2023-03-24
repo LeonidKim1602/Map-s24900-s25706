@@ -7,6 +7,9 @@ Authors:
 - s25706 - Lev Koliadich (backend/coding guru)
 - s24900 - Leonid Kim (frontend/rookie)
 
+Valuable feedback provider/tutor/el numero uno:
+- Illia Shkroba
+
 Functionalities to be implemented (so far):
 1. Opening and viewing maps of every floor in Bulding A and Building B (probably .svg files);
 2. Logging in with "S" number and password;
