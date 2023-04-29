@@ -4,7 +4,7 @@ with open("README.md") as buffer:
     long_description = buffer.read()
 
 setuptools.setup(
-    name="pjait_map",
+    name="utils",
     version="0.0.1",
     author="Leonid Kim",
     author_email="s24900@pjwstk.edu.pl",
