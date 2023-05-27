@@ -11,5 +11,5 @@ class Subject:
     name: Mapped[str] = mapped_column('Name')
 
     schedules: Mapped[list['Schedule']] = relationship(
-        back_populates='Schedule', default_factory=lambda: []
+        back_populates='subject', default_factory=lambda: []
     )

@@ -12,11 +12,11 @@ class Schedule:
     start: Mapped[int] = mapped_column('Start')
     end: Mapped[int] = mapped_column('End')
 
-    student_id: Mapped[int] = mapped_column(ForeignKey('Student.StudentId'))
-    student: Mapped['Student'] = relationship(back_populates='Student')
+    student_id: Mapped[int] = mapped_column('Student', ForeignKey('Student.Number'))
+    student: Mapped['Student'] = relationship(back_populates='schedules')
 
-    subject_id: Mapped[int] = mapped_column(ForeignKey('Subject.SubjectId'))
-    subject: Mapped['Subject'] = relationship(back_populates='Subject')
+    subject_id: Mapped[int] = mapped_column('Subject', ForeignKey('Subject.SubjectId'))
+    subject: Mapped['Subject'] = relationship(back_populates='schedules')
 
-    room_id: Mapped[int] = mapped_column(ForeignKey('Room.RoomId'))
-    room: Mapped['Room'] = relationship(back_populates='Room')
+    room_id: Mapped[int] = mapped_column('Room', ForeignKey('Room.RoomId'))
+    room: Mapped['Room'] = relationship(back_populates='schedules')
