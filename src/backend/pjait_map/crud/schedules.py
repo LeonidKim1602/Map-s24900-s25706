@@ -9,6 +9,9 @@ from schemas import ClassInfo, ClassUpdate
 def get_schedules_by_student(student_id: int, db: Session) -> list[Schedule]:
     return list(db.scalars(select(Schedule).where(Schedule.student == student_id)))
 
+def get_schedule(id: int, db: Session) -> Schedule:
+    return db.scalar(select(Schedule).where(Schedule.id == id))
+
 def add_schedule_stmt(**values) -> Insert[Schedule]:
     return insert(Schedule).values(values)
 
