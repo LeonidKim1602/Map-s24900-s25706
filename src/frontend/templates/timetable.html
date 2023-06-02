@@ -1,0 +1,41 @@
+<!-- templates/timetable.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="/static/styles_table.css">
+  <link href="https://fonts.cdnfonts.com/css/ocr-a-extended" rel="stylesheet">
+  <script src="/static/scripts.js"></script>
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <h1 class="logo"><a href="/">Schedule</a></h1>
+      <div class="buttons-container">
+        <button class="profile-button"><span></span>Profile</button>
+        <button class="logout-button"><span></span>Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="table-row">
+      {% for day in days %}
+      <div class="day-container">
+        <h2 class="day-title">{{ day.name }}</h2>
+        {% for activity in day.activities %}
+        <div class="activity-row">
+          <div class="activity-name">{{ activity.name }}</div>
+          <div class="action-buttons">
+            <button class="action-button" onclick="editActivity({{ activity.id }})"><span>&#9998;</span></button>
+            <button class="action-button" onclick="deleteActivity({{ activity.id }})"><span>&times;</span></button>
+          </div>
+        </div>
+        {% endfor %}
+        <button class="add-button" onclick="addActivity({{ day.id }})">Add</button>
+      </div>
+      {% endfor %}
+    </div>
+  </main>
+</body>
+</html>
+
