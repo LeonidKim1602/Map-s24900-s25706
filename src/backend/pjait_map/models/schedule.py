@@ -8,7 +8,6 @@ from .registry import mapper_registry
 class Schedule:
     __tablename__ = 'Schedule'
 
-    id: Mapped[int] = mapped_column('ScheduleId', primary_key=True)
     start: Mapped[int] = mapped_column('Start')
     end: Mapped[int] = mapped_column('End')
 
@@ -20,3 +19,5 @@ class Schedule:
 
     room_id: Mapped[int] = mapped_column('Room', ForeignKey('Room.RoomId'))
     room: Mapped['Room'] = relationship(back_populates='schedules')
+
+    id: Mapped[int | None] =  mapped_column('ScheduleId', primary_key=True, autoincrement=True, default_factory=lambda: None)
