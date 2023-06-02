@@ -1,54 +1,62 @@
-from sqlalchemy import insert, select, update, delete
+from sqlalchemy import delete
 from sqlalchemy.orm import Session
-from sqlalchemy.sql import Insert, Update
 
-from models import Schedule
-from schemas import ClassInfo, ClassUpdate
+from models import Schedule, Subject, Student, Room
+from schemas import ClassInfo, ScheduleInfo
 
-
-def get_schedules_by_student(student_id: int, db: Session) -> list[Schedule]:
-    return list(db.scalars(select(Schedule).where(Schedule.student == student_id)))
-
-def get_schedule(id: int, db: Session) -> Schedule:
-    return db.scalar(select(Schedule).where(Schedule.id == id))
-
-def add_schedule_stmt(**values) -> Insert[Schedule]:
-    return insert(Schedule).values(values)
 
 def to_seconds(weekday: int, hours: int, minutes: int) -> int:
     return weekday * 24 * 60 * 60 + hours * 60 * 60 + minutes * 60
 
-def add_schedule(data: ClassInfo, student: int, db: Session) -> None:
+def get_schedule(id: int, db: Session) -> Schedule | None:
+    return db.get(Schedule, id)
+
+def add_schedule(data: ClassInfo, student: int, db: Session) -> Schedule:
     start_hours, start_minutes = map(int, data.start.split(':'))
     end_hours, end_minutes = map(int, data.end.split(':'))
 
-    insert_values = {
-        'start': to_seconds(data.weekday, start_hours, start_minutes),
-        'end': to_seconds(data.weekday, end_hours, end_minutes),
-        'student_id': student,
-        'subject_id': data.subject_id,
-        'room_id': data.room_id
-    }
+    start = to_seconds(data.weekday, start_hours, start_minutes)
+    end = to_seconds(data.weekday, end_hours, end_minutes)
 
-    db.execute(add_schedule_stmt(**insert_values))
+    schedule = Schedule(
+        start=start,
+        end=end,
+        student_id=student,
+        student=db.get(Student, student),
+        subject_id=data.subject_id,
+        subject=db.get(Subject, data.subject_id),
+        room_id=data.room_id,
+        room=db.get(Room, data.room_id)
+    )
+
+    db.add(schedule)
     db.commit()
+    db.refresh(schedule)
 
-def update_schedule_stmt(schedule_id: int, **values) -> Update[Schedule]:
-    return update(Schedule).where(Schedule.id == schedule_id).values(values)
+    return schedule
 
-def update_schedule(data: ClassUpdate, db: Session) -> None:
+def update_schedule(data: ScheduleInfo, db: Session) -> Schedule | None:
     start_hours, start_minutes = map(int, data.data.start.split(':'))
     end_hours, end_minutes = map(int, data.data.end.split(':'))
 
-    update_values = {
-        'start': to_seconds(data.data.weekday, start_hours, start_minutes),
-        'end': to_seconds(data.data.weekday, end_hours, end_minutes),
-        'subject_id': data.data.subject_id,
-        'room_id': data.data.room_id
-    }
+    start = to_seconds(data.data.weekday, start_hours, start_minutes)
+    end = to_seconds(data.data.weekday, end_hours, end_minutes)
 
-    db.execute(update_schedule_stmt(data.schedule_id, **update_values))
+    schedule = db.get(Schedule, data.schedule_id)
+
+    if schedule is None:
+        return None
+
+    schedule.start = start
+    schedule.end = end
+    schedule.subject_id = data.data.subject_id
+    schedule.subject = db.get(Subject, data.data.subject_id)
+    schedule.room_id = data.data.room_id
+    schedule.room = db.get(Room, data.data.room_id)
+
     db.commit()
+
+    return schedule
 
 def delete_schedule(schedule_id: int, db: Session) -> None:
     stmt = delete(Schedule).where(Schedule.id == schedule_id)
