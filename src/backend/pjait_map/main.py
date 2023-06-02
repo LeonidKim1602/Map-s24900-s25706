@@ -1,54 +1,36 @@
 from typing import Annotated
 
 from fastapi import Cookie, Depends, FastAPI, Response
-from fastapi.responses import Response
 from sqlalchemy.orm import Session
-from pydantic import BaseModel
 
 import crud
-from dependencies import get_db
-from models import Student
-from schemas import LoginData, ClassInfo, ClassUpdate
+from dependencies import get_db, issue_token, authenticate_user
+from schemas import User, ClassInfo, ScheduleInfo
 
 
 app = FastAPI()
 
-cookie_storage: dict[str, int] = {}
-
-
-class StudentSchema(BaseModel):
-    number: int
-    password: str
-    name: str
-    surname: str
-
-def schema_from_model(model: Student) -> StudentSchema:
-    return StudentSchema(
-        number=model.number,
-        password=model.password,
-        name=model.name,
-        surname=model.surname
-    )
-
-@app.get('/student/{number}')
-async def read_students(number: int, db: Session = Depends(get_db)) -> StudentSchema | None:
-    model = crud.get_student_by_number(number, db)
-    return schema_from_model(model) if model is not None else None
 
 @app.post('/login')
-async def login_post(data: LoginData, db: Session = Depends(get_db)) -> Response:
+async def login_post(data: User, db: Session = Depends(get_db)) -> Response:
     if not data.login.startswith('s'):
         return Response(status_code=404)
 
-    number = int(data.login[1:])
-    student = crud.get_student_by_number(number, db)
+    try:
+        number = int(data.login[1:])
+    except ValueError:
+        return Response(status_code=404)
+
+    student = crud.get_student(number, db)
 
     if student is None or data.password != student.password:
         return Response(status_code=404)
 
     response = Response()
-    response.set_cookie(key='user', value=student.name) # Find a way to make session
-    cookie_storage[student.name] = student.number
+
+    token = issue_token(student.number)
+    response.set_cookie(key='session', value=token, max_age=600, expires=600)
+
     return response
 
 @app.post('/schedule')
@@ -56,17 +38,26 @@ async def add_schedule(info: ClassInfo, auth_cookie: Annotated[str | None, Cooki
     if auth_cookie is None:
         return Response(status_code=401)
 
-    student_id = cookie_storage[auth_cookie]
+    student_id = authenticate_user(auth_cookie)
+
+    if student_id is None:
+        return Response(status_code=401)
+
     crud.add_schedule(info, student_id, db)
+
     return Response(status_code=201)
 
 @app.put('/schedule')
-async def update_schedule(data: ClassUpdate, auth_cookie: Annotated[str | None, Cookie()] = None, db: Session = Depends(get_db)) -> Response:
+async def update_schedule(data: ScheduleInfo, auth_cookie: Annotated[str | None, Cookie()] = None, db: Session = Depends(get_db)) -> Response:
     if auth_cookie is None:
         return Response(status_code=401)
 
-    student_id = cookie_storage[auth_cookie]
-    student = crud.get_student_by_number(student_id, db)
+    student_id = authenticate_user(auth_cookie)
+
+    if student_id is None:
+        return Response(status_code=401)
+
+    student = crud.get_student(student_id, db)
 
     if student is None:
         return Response(status_code=401)
@@ -84,8 +75,12 @@ async def delete_schedule(schedule_id: int, auth_cookie: Annotated[str | None, C
     if auth_cookie is None:
         return Response(status_code=401)
 
-    student_id = cookie_storage[auth_cookie]
-    student = crud.get_student_by_number(student_id, db)
+    student_id = authenticate_user(auth_cookie)
+
+    if student_id is None:
+        return Response(status_code=401)
+
+    student = crud.get_student(student_id, db)
 
     if student is None:
         return Response(status_code=401)
