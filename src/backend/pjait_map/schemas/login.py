@@ -1,10 +1,10 @@
 from pydantic import BaseModel
 
-class LoginData(BaseModel):
+
+class User(BaseModel):
     login: str
     password: str
 
-class SignupData(BaseModel):
-    login: LoginData
+class CreateUser(User):
     name: str
     surname: str

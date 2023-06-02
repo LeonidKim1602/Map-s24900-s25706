@@ -1,2 +1,2 @@
-from .login import LoginData, SignupData
-from .class_schemas import Position, ClassLocation, ClassInfo, ClassUpdate
+from .login import User, CreateUser
+from .class_schemas import Position, ClassLocation, ClassInfo, ScheduleInfo

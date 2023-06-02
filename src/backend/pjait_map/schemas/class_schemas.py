@@ -16,6 +16,6 @@ class ClassInfo(BaseModel):
     start: str # start and end in "hh:mm" format,
     end: str   # so for now they are str
 
-class ClassUpdate(BaseModel):
+class ScheduleInfo(BaseModel):
     schedule_id: int
     data: ClassInfo
