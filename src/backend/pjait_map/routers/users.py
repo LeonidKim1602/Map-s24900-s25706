@@ -6,14 +6,12 @@ from schemas import User
 import crud
 
 
-router = APIRouter(
-    prefix='/user',
-    dependencies=[Depends(get_db)]
-)
+router = APIRouter(prefix="/user", dependencies=[Depends(get_db)])
 
-@router.post('/login')
+
+@router.post("/login")
 async def login(data: User, db: Session = Depends(get_db)) -> Response:
-    if not data.login.startswith('s'):
+    if not data.login.startswith("s"):
         return Response(status_code=404)
 
     try:
@@ -29,8 +27,9 @@ async def login(data: User, db: Session = Depends(get_db)) -> Response:
     response = Response()
 
     token = issue_token(student.number)
-    response.set_cookie(key='session', value=token, max_age=600, expires=600)
+    response.set_cookie(key="session", value=token, max_age=600, expires=600)
 
     return response
+
 
 # TODO signup

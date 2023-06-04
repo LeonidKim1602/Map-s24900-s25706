@@ -8,12 +8,14 @@ from schemas import ClassInfo, ScheduleInfo
 def to_seconds(weekday: int, hours: int, minutes: int) -> int:
     return weekday * 24 * 60 * 60 + hours * 60 * 60 + minutes * 60
 
+
 def get_schedule(id: int, db: Session) -> Schedule | None:
     return db.get(Schedule, id)
 
+
 def add_schedule(data: ClassInfo, student: int, db: Session) -> Schedule:
-    start_hours, start_minutes = map(int, data.start.split(':'))
-    end_hours, end_minutes = map(int, data.end.split(':'))
+    start_hours, start_minutes = map(int, data.start.split(":"))
+    end_hours, end_minutes = map(int, data.end.split(":"))
 
     start = to_seconds(data.weekday, start_hours, start_minutes)
     end = to_seconds(data.weekday, end_hours, end_minutes)
@@ -26,7 +28,7 @@ def add_schedule(data: ClassInfo, student: int, db: Session) -> Schedule:
         subject_id=data.subject_id,
         subject=db.get(Subject, data.subject_id),
         room_id=data.room_id,
-        room=db.get(Room, data.room_id)
+        room=db.get(Room, data.room_id),
     )
 
     db.add(schedule)
@@ -35,9 +37,10 @@ def add_schedule(data: ClassInfo, student: int, db: Session) -> Schedule:
 
     return schedule
 
+
 def update_schedule(data: ScheduleInfo, db: Session) -> Schedule | None:
-    start_hours, start_minutes = map(int, data.data.start.split(':'))
-    end_hours, end_minutes = map(int, data.data.end.split(':'))
+    start_hours, start_minutes = map(int, data.data.start.split(":"))
+    end_hours, end_minutes = map(int, data.data.end.split(":"))
 
     start = to_seconds(data.data.weekday, start_hours, start_minutes)
     end = to_seconds(data.data.weekday, end_hours, end_minutes)
@@ -57,6 +60,7 @@ def update_schedule(data: ScheduleInfo, db: Session) -> Schedule | None:
     db.commit()
 
     return schedule
+
 
 def delete_schedule(schedule_id: int, db: Session) -> None:
     stmt = delete(Schedule).where(Schedule.id == schedule_id)

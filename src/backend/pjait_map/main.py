@@ -12,8 +12,9 @@ app = FastAPI(dependencies=[Depends(get_db)])
 app.include_router(user_router)
 app.include_router(schedule_router)
 
-@app.get('/')
+
+@app.get("/")
 async def root(auth_cookie: Annotated[str | None, Cookie()] = None) -> Response:
     if auth_cookie is None or authenticate_user(auth_cookie) is None:
-        return RedirectResponse('/user/login')
-    return RedirectResponse('/schedule')
+        return RedirectResponse("/user/login")
+    return RedirectResponse("/schedule")

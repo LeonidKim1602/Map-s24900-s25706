@@ -2,6 +2,7 @@ from collections.abc import MutableMapping
 from typing import Iterable
 from uuid import uuid4
 
+
 class CookieStorage(MutableMapping):
     def __init__(self):
         self._cookies: dict[str, int] = {}
@@ -17,7 +18,7 @@ class CookieStorage(MutableMapping):
         self._cookies[key] = value
         self._users[value] = key
 
-        print(key, ': ', value)
+        print(key, ": ", value)
 
     def __delitem__(self, key: str) -> None:
         del self._users[self._cookies[key]]
@@ -48,5 +49,6 @@ def get_storage_functions():
         return None
 
     return issue_token, authenticate_user
+
 
 issue_token, authenticate_user = get_storage_functions()
