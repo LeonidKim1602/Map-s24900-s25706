@@ -1,2 +1,2 @@
-from .dependencies import SessionLocal, engine, get_db
+from .database import DatabaseManager
 from .cookie import issue_token, authenticate_user

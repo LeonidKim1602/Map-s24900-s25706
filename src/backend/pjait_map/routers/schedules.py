@@ -4,18 +4,18 @@ from fastapi import APIRouter, Cookie, Depends, Response
 from sqlalchemy.orm import Session
 
 import crud
-from dependencies import get_db, authenticate_user
+from dependencies import DatabaseManager, authenticate_user
 from schemas import ClassInfo, ScheduleInfo
 
 
-router = APIRouter(prefix="/schedule", dependencies=[Depends(get_db)])
+router = APIRouter(prefix="/schedule", dependencies=[Depends(DatabaseManager.get_db)])
 
 
 @router.post("/")
 async def add_schedule(
     info: ClassInfo,
     auth_cookie: Annotated[str | None, Cookie()] = None,
-    db: Session = Depends(get_db),
+    db: Session = Depends(DatabaseManager.get_db),
 ) -> Response:
     if auth_cookie is None:
         return Response(status_code=401)
@@ -34,7 +34,7 @@ async def add_schedule(
 async def update_schedule(
     data: ScheduleInfo,
     auth_cookie: Annotated[str | None, Cookie()] = None,
-    db: Session = Depends(get_db),
+    db: Session = Depends(DatabaseManager.get_db),
 ) -> Response:
     if auth_cookie is None:
         return Response(status_code=401)
@@ -62,7 +62,7 @@ async def update_schedule(
 async def delete_schedule(
     schedule_id: int,
     auth_cookie: Annotated[str | None, Cookie()] = None,
-    db: Session = Depends(get_db),
+    db: Session = Depends(DatabaseManager.get_db),
 ) -> Response:
     if auth_cookie is None:
         return Response(status_code=401)

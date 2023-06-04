@@ -1,16 +1,16 @@
 from fastapi import APIRouter, Depends, Response
 from sqlalchemy.orm import Session
 
-from dependencies import get_db, issue_token
+from dependencies import DatabaseManager, issue_token
 from schemas import User
 import crud
 
 
-router = APIRouter(prefix="/user", dependencies=[Depends(get_db)])
+router = APIRouter(prefix="/user", dependencies=[Depends(DatabaseManager.get_db)])
 
 
 @router.post("/login")
-async def login(data: User, db: Session = Depends(get_db)) -> Response:
+async def login(data: User, db: Session = Depends(DatabaseManager.get_db)) -> Response:
     if not data.login.startswith("s"):
         return Response(status_code=404)
 
