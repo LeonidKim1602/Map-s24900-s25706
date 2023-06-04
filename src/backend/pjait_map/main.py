@@ -1,3 +1,4 @@
+import os
 from typing import Annotated
 
 from fastapi import Cookie, Depends, FastAPI, Response
@@ -22,8 +23,10 @@ async def root(auth_cookie: Annotated[str | None, Cookie()] = None) -> Response:
 
 @app.on_event("startup")
 async def startup() -> None:
-    DB_URL = "sqlite:///test.db"
-    DatabaseManager.connect(DB_URL)
+    default_url = "sqlite:///test.db"
+    db_url = os.getenv("DB_URL", default_url)
+
+    DatabaseManager.connect(db_url)
 
 
 @app.on_event("shutdown")
