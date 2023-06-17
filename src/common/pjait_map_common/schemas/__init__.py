@@ -1,2 +1,3 @@
 from .login import User, CreateUser
-from .class_schemas import Position, ClassLocation, ClassInfo, ScheduleInfo
+from .schedule import Schedule, ScheduleChange, NewSchedule
+from .room import Position, ClassLocation, Room
