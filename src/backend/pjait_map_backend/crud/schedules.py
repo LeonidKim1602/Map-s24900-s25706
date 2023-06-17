@@ -1,34 +1,28 @@
 from sqlalchemy import delete
 from sqlalchemy.orm import Session
 
+from dependencies import to_seconds
 from models import Schedule, Subject, Student, Room
-from schemas import ClassInfo, ScheduleInfo
-
-
-def to_seconds(weekday: int, hours: int, minutes: int) -> int:
-    return weekday * 24 * 60 * 60 + hours * 60 * 60 + minutes * 60
+from pjait_map_common.schemas import NewSchedule, ScheduleChange
 
 
 def get_schedule(id: int, db: Session) -> Schedule | None:
     return db.get(Schedule, id)
 
 
-def add_schedule(data: ClassInfo, student: int, db: Session) -> Schedule:
-    start_hours, start_minutes = map(int, data.start.split(":"))
-    end_hours, end_minutes = map(int, data.end.split(":"))
-
-    start = to_seconds(data.weekday, start_hours, start_minutes)
-    end = to_seconds(data.weekday, end_hours, end_minutes)
+def add_schedule(data: NewSchedule, db: Session) -> Schedule:
+    start = to_seconds(data.schedule.weekday, data.schedule.start)
+    end = to_seconds(data.schedule.weekday, data.schedule.end)
 
     schedule = Schedule(
         start=start,
         end=end,
-        student_id=student,
-        student=db.get(Student, student),
-        subject_id=data.subject_id,
-        subject=db.get(Subject, data.subject_id),
-        room_id=data.room_id,
-        room=db.get(Room, data.room_id),
+        student_id=data.student_id,
+        student=db.get(Student, data.student_id),
+        subject_id=data.schedule.subject_id,
+        subject=db.get(Subject, data.schedule.subject_id),
+        room_id=data.schedule.room_id,
+        room=db.get(Room, data.schedule.room_id),
     )
 
     db.add(schedule)
@@ -38,12 +32,9 @@ def add_schedule(data: ClassInfo, student: int, db: Session) -> Schedule:
     return schedule
 
 
-def update_schedule(data: ScheduleInfo, db: Session) -> Schedule | None:
-    start_hours, start_minutes = map(int, data.data.start.split(":"))
-    end_hours, end_minutes = map(int, data.data.end.split(":"))
-
-    start = to_seconds(data.data.weekday, start_hours, start_minutes)
-    end = to_seconds(data.data.weekday, end_hours, end_minutes)
+def update_schedule(data: ScheduleChange, db: Session) -> Schedule | None:
+    start = to_seconds(data.schedule.weekday, data.schedule.start)
+    end = to_seconds(data.schedule.weekday, data.schedule.end)
 
     schedule = db.get(Schedule, data.schedule_id)
 
@@ -52,10 +43,10 @@ def update_schedule(data: ScheduleInfo, db: Session) -> Schedule | None:
 
     schedule.start = start
     schedule.end = end
-    schedule.subject_id = data.data.subject_id
-    schedule.subject = db.get(Subject, data.data.subject_id)
-    schedule.room_id = data.data.room_id
-    schedule.room = db.get(Room, data.data.room_id)
+    schedule.subject_id = data.schedule.subject_id
+    schedule.subject = db.get(Subject, data.schedule.subject_id)
+    schedule.room_id = data.schedule.room_id
+    schedule.room = db.get(Room, data.schedule.room_id)
 
     db.commit()
 

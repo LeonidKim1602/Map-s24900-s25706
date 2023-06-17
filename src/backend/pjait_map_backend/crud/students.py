@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
 from models import Student
-from schemas import CreateUser
+from pjait_map_common.schemas import CreateUser
 
 
 def get_student(number: int, db: Session) -> Student | None:
