@@ -1,16 +1,15 @@
 import os
-from typing import Annotated
 
 from fastapi import Depends, FastAPI
 
 from dependencies import DatabaseManager
-from routers import user_router, schedule_router
+from routers import schedule_router, room_router
 
 
 app = FastAPI(dependencies=[Depends(DatabaseManager.get_db)])
 
-app.include_router(user_router)
 app.include_router(schedule_router)
+app.include_router(room_router)
 
 
 @app.on_event("startup")

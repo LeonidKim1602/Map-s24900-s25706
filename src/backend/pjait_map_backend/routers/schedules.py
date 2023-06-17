@@ -1,86 +1,60 @@
-from typing import Annotated
-
-from fastapi import APIRouter, Cookie, Depends, Response
+from fastapi import APIRouter, Depends, Response
+from fastapi.encoders import jsonable_encoder
+from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 import crud
-from dependencies import DatabaseManager, authenticate_user
-from schemas import ClassInfo, ScheduleInfo
+from dependencies import DatabaseManager, get_weekday, get_time
+from pjait_map_common.schemas import Schedule, NewSchedule, ScheduleChange
 
 
 router = APIRouter(prefix="/schedule", dependencies=[Depends(DatabaseManager.get_db)])
 
 
+@router.get("/student/{student_id}")
+async def get_schedule(student_id: int, db: Session = Depends(DatabaseManager.get_db)) -> Response:
+    student = crud.get_student(student_id, db)
+
+    if student is None:
+        return Response(status_code=404)
+
+    schedules = [
+        jsonable_encoder(Schedule(
+            subject_id=s.id,
+            room_id=s.room_id,
+            weekday=get_weekday(s.start),
+            start=get_time(s.start),
+            end=get_time(s.end)
+        ))
+        for s in student.schedules
+    ]
+
+    return JSONResponse(content=schedules)
+
+
 @router.post("/")
-async def add_schedule(
-    info: ClassInfo,
-    auth_cookie: Annotated[str | None, Cookie()] = None,
-    db: Session = Depends(DatabaseManager.get_db),
-) -> Response:
-    if auth_cookie is None:
-        return Response(status_code=401)
-
-    student_id = authenticate_user(auth_cookie)
-
-    if student_id is None:
-        return Response(status_code=401)
-
-    crud.add_schedule(info, student_id, db)
-
+async def add_schedule(data: NewSchedule, db: Session = Depends(DatabaseManager.get_db)) -> Response:
+    crud.add_schedule(data, db)
     return Response(status_code=201)
 
 
 @router.put("/")
-async def update_schedule(
-    data: ScheduleInfo,
-    auth_cookie: Annotated[str | None, Cookie()] = None,
-    db: Session = Depends(DatabaseManager.get_db),
-) -> Response:
-    if auth_cookie is None:
-        return Response(status_code=401)
-
-    student_id = authenticate_user(auth_cookie)
-
-    if student_id is None:
-        return Response(status_code=401)
-
-    student = crud.get_student(student_id, db)
-
-    if student is None:
-        return Response(status_code=401)
-
-    schedule = crud.get_schedule(data.schedule_id, db)
-
-    if schedule not in student.schedules:
-        return Response(status_code=403)
-
+async def update_schedule(data: ScheduleChange, db: Session = Depends(DatabaseManager.get_db)) -> Response:
     crud.update_schedule(data, db)
     return Response(status_code=201)
 
 
-@router.delete("/{schedule_id}")
-async def delete_schedule(
-    schedule_id: int,
-    auth_cookie: Annotated[str | None, Cookie()] = None,
-    db: Session = Depends(DatabaseManager.get_db),
-) -> Response:
-    if auth_cookie is None:
-        return Response(status_code=401)
-
-    student_id = authenticate_user(auth_cookie)
-
-    if student_id is None:
-        return Response(status_code=401)
-
+@router.delete("/{studend_id}/{schedule_id}")
+async def delete_schedule(student_id: int, schedule_id: int, db: Session = Depends(DatabaseManager.get_db)) -> Response:
     student = crud.get_student(student_id, db)
 
     if student is None:
-        return Response(status_code=401)
+        return Response(status_code=404)
 
     schedule = crud.get_schedule(schedule_id, db)
 
     if schedule not in student.schedules:
-        return Response(status_code=403)
+        return Response(status_code=404)
 
     crud.delete_schedule(schedule_id, db)
     return Response(status_code=200)
