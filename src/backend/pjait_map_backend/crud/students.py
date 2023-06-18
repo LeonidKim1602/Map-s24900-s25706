@@ -9,9 +9,8 @@ def get_student(number: int, db: Session) -> Student | None:
 
 
 def add_student(schema: CreateUser, db: Session) -> Student:
-    number = int(schema.login[1:])
     student = Student(
-        number=number,
+        number=schema.number,
         password=schema.password,
         name=schema.name,
         surname=schema.surname,
