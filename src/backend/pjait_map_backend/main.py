@@ -3,7 +3,7 @@ import os
 from fastapi import Depends, FastAPI
 
 from dependencies import DatabaseManager
-from routers import schedule_router, room_router, subject_router
+from routers import schedule_router, room_router, subject_router, student_router
 
 
 app = FastAPI(dependencies=[Depends(DatabaseManager.get_db)])
@@ -11,6 +11,7 @@ app = FastAPI(dependencies=[Depends(DatabaseManager.get_db)])
 app.include_router(schedule_router)
 app.include_router(room_router)
 app.include_router(subject_router)
+app.include_router(student_router)
 
 
 @app.on_event("startup")
