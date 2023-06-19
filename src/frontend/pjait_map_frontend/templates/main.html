@@ -25,6 +25,9 @@
     	<div class="map-image" id="map-image">
     	</div>
     	<div class="container">
+        <div class="legend">
+            <img src="{{ backend }}/img/Legend.png" alt="Legend" id="img">
+        </div>
     		<div class="sidebar">
       			<div class="schedule-text">Schedule Today</div>
       				{% for schedule, location, subject in subjects_today %}

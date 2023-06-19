@@ -64,6 +64,10 @@ header {
   margin-left: 10px;
 }
 
+.legend{
+  margin-right: 10px;
+}
+
 .container {
   display: flex;
   justify-content: space-between;
