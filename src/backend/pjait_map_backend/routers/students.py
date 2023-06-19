@@ -10,7 +10,9 @@ router = APIRouter(prefix="/student", dependencies=[Depends(DatabaseManager.get_
 
 
 @router.post("/")
-async def get_student(user: User, db: Session = Depends(DatabaseManager.get_db)) -> Response:
+async def get_student(
+    user: User, db: Session = Depends(DatabaseManager.get_db)
+) -> Response:
     student = crud.get_student(user.number, db)
 
     if student is None:
@@ -23,6 +25,8 @@ async def get_student(user: User, db: Session = Depends(DatabaseManager.get_db))
 
 
 @router.post("/new")
-async def create_student(user: CreateUser, db: Session = Depends(DatabaseManager.get_db)) -> Response:
+async def create_student(
+    user: CreateUser, db: Session = Depends(DatabaseManager.get_db)
+) -> Response:
     crud.add_student(user, db)
     return Response(status_code=201)

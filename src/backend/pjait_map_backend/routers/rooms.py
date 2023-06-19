@@ -17,19 +17,18 @@ async def get_rooms(db: Session = Depends(DatabaseManager.get_db)) -> list[Room]
 
 
 @router.get("/{room_id}")
-async def get_room_details(room_id: int, db: Session = Depends(DatabaseManager.get_db)) -> Response:
+async def get_room_details(
+    room_id: int, db: Session = Depends(DatabaseManager.get_db)
+) -> Response:
     room = crud.get_room(room_id, db)
 
     if room is None:
         return Response(status_code=404)
-    
+
     location = ClassLocation(
         room=room.name,
         file=room.location.file.name,
-        pos=Position(
-            x=room.location.x,
-            y=room.location.y
-        )
+        pos=Position(x=room.location.x, y=room.location.y),
     )
 
     return JSONResponse(content=jsonable_encoder(location))

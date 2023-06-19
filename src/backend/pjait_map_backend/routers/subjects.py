@@ -17,7 +17,9 @@ async def get_subjects(db: Session = Depends(DatabaseManager.get_db)) -> list[Su
 
 
 @router.get("/{subject_id}")
-async def get_subject(subject_id: int, db: Session = Depends(DatabaseManager.get_db)) -> Response:
+async def get_subject(
+    subject_id: int, db: Session = Depends(DatabaseManager.get_db)
+) -> Response:
     subject = crud.get_subject(subject_id, db)
 
     if subject is None:
