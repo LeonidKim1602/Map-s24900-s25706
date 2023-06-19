@@ -94,4 +94,12 @@ h1 {
 p {
   color: black;
 }
+.pin {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-color: red;
+  border-radius: 50%;
+}
+
 
