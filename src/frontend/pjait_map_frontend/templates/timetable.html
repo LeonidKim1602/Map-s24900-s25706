@@ -19,15 +19,15 @@
 
   <main>
     <div class="table-row">
-      {% for day in days %}
+      {% for day, weekday in days %}
       <div class="day-container">
-        <h2 class="day-title">{{ day.name }}</h2>
-        {% for activity in day.activities %}
+        <h2 class="day-title">{{ weekday }}</h2>
+        {% for schedule in day %}
         <div class="activity-row">
-          <div class="activity-name">{{ activity.name }}</div>
+          <div class="activity-name">{{ schedule.name }}</div>
           <div class="action-buttons">
-            <button class="action-button" onclick="editActivity({{ activity.id }})"><span>&#9998;</span></button>
-            <button class="action-button" onclick="deleteActivity({{ activity.id }})"><span>&times;</span></button>
+            <button class="action-button" onclick="editActivity({{ schedule.id }})"><span>&#9998;</span></button>
+            <button class="action-button" onclick="deleteActivity({{ schedule.id }})"><span>&times;</span></button>
           </div>
         </div>
         {% endfor %}

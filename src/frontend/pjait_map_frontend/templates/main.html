@@ -3,6 +3,7 @@
 <head>
   <link rel="stylesheet" type="text/css" href="/static/styles.css">
   <link href="https://fonts.cdnfonts.com/css/ocr-a-extended" rel="stylesheet">
+  <script src="/static/main.js"></script>
 </head>
 <body>
   <header>
@@ -18,17 +19,20 @@
 
   <div class="content">
     <h1>Your next class is in...</h1>
-    <p>This is the body content of the web page.</p>
+    <div class="map-image">
+    </div>
   </div>
 
   <div class="container">
     <div class="sidebar">
-      <div class="schedule-text">Schedule</div>
-      <ul id="subject-list"></ul>
+      <div class="schedule-text">Schedule Today</div>
+      {% for subject, location in subjects_today %}
+      <ul id="subject-list"><button onclick="displayImage('{{ location.file }}')">{{ subject.name }}</button></ul>
+      {% endfor %}
     </div>
   </div>
 
-  <script src="/static/main.js"></script>
+
 </body>
 </html>
 
