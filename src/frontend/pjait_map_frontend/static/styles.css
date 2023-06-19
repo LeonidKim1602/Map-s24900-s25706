@@ -59,8 +59,8 @@ header {
 
 .container {
   display: flex;
-  margin-top: 20px;
   justify-content: flex-end;
+  margin-top: 0;
 }
 
 .sidebar {
