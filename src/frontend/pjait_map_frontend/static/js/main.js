@@ -8,6 +8,6 @@ function displayImage(imageURL, locX, locY) {
   const rect = element.getBoundingClientRect();
   const offsetX = rect.left;
   const offsetY = rect.top;
-  const pin = `<div class="pin" style="left: ${offsetX + locX}px; top: ${offsetY + locY}px;"></div>`;
+  const pin = `<div class="pin" style="left: ${offsetX + locX - 20}px; top: ${offsetY + locY - 20}px;"></div>`;
   contentSection.innerHTML += pin;
 }
