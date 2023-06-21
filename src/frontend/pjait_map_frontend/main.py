@@ -50,7 +50,7 @@ async def login(
             "login.html", {"request": request, "error_message": error_message}
         )
     else:
-        error_message = "MEGAERROR"
+        error_message = "Unable to login, try again later"
         return templates.TemplateResponse(
             "login.html", {"request": request, "error_message": error_message}
         )
@@ -60,39 +60,33 @@ async def login(
 def signup(request: Request) -> HTMLResponse:
     return templates.TemplateResponse("signup.html", {"request": request})
 
+
 @app.post("/signup", response_class=HTMLResponse)
 async def signup(
-    username: Annotated[str, Form()], password: Annotated[str, Form()], name: Annotated[str, Form()], surname: Annotated[str, Form()], request: Request
+    username: Annotated[str, Form()],
+    password: Annotated[str, Form()],
+    name: Annotated[str, Form()],
+    surname: Annotated[str, Form()],
+    request: Request,
 ) -> Response:
     request_user = User(number=int(username[1:]), password=password)
-    request_create = CreateUser(number=int(username[1:]), password=password, name = name, surname = surname)
+    request_create = CreateUser(
+        number=int(username[1:]), password=password, name=name, surname=surname
+    )
     response = requests.post("http://localhost:8001/student", json=request_user.dict())
     if response.status_code == 403:
         error_message = "User already exists"
         return templates.TemplateResponse(
-        "signup.html",
-        {"request": request, "error_message": error_message}
+            "signup.html", {"request": request, "error_message": error_message}
         )
 
-    response_create = requests.post("http://localhost:8001/student/new", json=request_create.dict())
+    response_create = requests.post(
+        "http://localhost:8001/student/new", json=request_create.dict()
+    )
     message = "User created"
     return templates.TemplateResponse(
-    "signup.html",
-    {"request": request, "message": message}
+        "signup.html", {"request": request, "message": message}
     )
-
-# @app.post("/signup", response_class=HTMLResponse)
-# async def signup(username: Annotated[str, Form()], password: Annotated[str, Form()], name: Annotated[str, Form()], surname: Annotated[str, Form()], request: Request) -> Response:
-# request_user = User(number=int(username[1:]), password=password)
-# response = requests.post("http://localhost:8001/student", json=request_user.dict())
-
-# if response.status_code == 200:
-# error_message = "User already exists"
-# return templates.TemplateResponse(
-# "signup.html",
-# {"request": request, "error_message": error_message}
-# )
-# elif response.status_code == 404:
 
 
 @app.post("/", dependencies=[Depends(cookie)])
@@ -121,7 +115,8 @@ async def index(request: Request, session_data: SessionData | None = Depends(ver
     subjects_today = zip(today, locations, subjects)
 
     return templates.TemplateResponse(
-        "main.html", {"request": request, "subjects_today": subjects_today, "user": user}
+        "main.html",
+        {"request": request, "subjects_today": subjects_today, "user": user},
     )
 
 
@@ -140,7 +135,9 @@ def find_by_id(l: list[Any], id: int) -> Any | None:
 
 
 @app.get("/timetable", dependencies=[Depends(cookie)])
-def timetable(request: Request, session_data: SessionData | None = Depends(verifier)):
+def get_timetable(
+    request: Request, session_data: SessionData | None = Depends(verifier)
+):
     if session_data is None:
         return RedirectResponse("/login")
 
@@ -176,18 +173,33 @@ def timetable(request: Request, session_data: SessionData | None = Depends(verif
         },
     )
 
+
 @app.post("/timetable", dependencies=[Depends(cookie)])
-def timetable(subject_id: Annotated[str, Form()], room_id: Annotated[str, Form()], weekday: Annotated[str, Form()] , start: Annotated[str, Form()], end: Annotated[str, Form()], request: Request, session_data: SessionData | None = Depends(verifier)):
-    request = NewSchedule(student_id = session_data.student_id, subject_id = int(subject_id), room_id = int(room_id), weekday = int(weekday), start = int(start), end = int(end))
-    response = requests.post("http://localhost:8001/schedule", json=request.dict())
-    
-    return RedirectResponse("/login")
+def new_timetable(
+    subject_id: Annotated[str, Form()],
+    room_id: Annotated[str, Form()],
+    weekday: Annotated[str, Form()],
+    start: Annotated[str, Form()],
+    end: Annotated[str, Form()],
+    session_data: SessionData | None = Depends(verifier),
+):
+    schedule = Schedule(
+        subject_id=int(subject_id),
+        room_id=int(room_id),
+        weekday=int(weekday),
+        start=start,
+        end=end,
+    )
+    request_data = NewSchedule(student_id=session_data.student_id, schedule=schedule)
+
+    response = requests.post("http://localhost:8001/schedule", json=request_data.dict())
+
+    return Response(status_code=response.status_code)
+
 
 @app.delete("/timetable/{schedule_id}", dependencies=[Depends(cookie)])
-def timetable(
-    request: Request, schedule_id: int, session_data: SessionData = Depends(verifier)
-):
+def delete_timetable(schedule_id: int, session_data: SessionData = Depends(verifier)):
     response = requests.delete(
         f"http://localhost:8001/schedule/{session_data.student_id}/{schedule_id}"
     )
-    return Response(status_code=200)
+    return Response(status_code=response.status_code)
