@@ -181,6 +181,7 @@ def new_timetable(
     weekday: Annotated[str, Form()],
     start: Annotated[str, Form()],
     end: Annotated[str, Form()],
+    request: Request,
     session_data: SessionData | None = Depends(verifier),
 ):
     schedule = Schedule(
@@ -194,12 +195,12 @@ def new_timetable(
 
     response = requests.post("http://localhost:8001/schedule", json=request_data.dict())
 
-    return Response(status_code=response.status_code)
+    return get_timetable(request, session_data)
 
 
-@app.delete("/timetable/{schedule_id}", dependencies=[Depends(cookie)])
-def delete_timetable(schedule_id: int, session_data: SessionData = Depends(verifier)):
+@app.delete("/timetable/{schedule_id}",  dependencies=[Depends(cookie)])
+def delete_timetable(schedule_id: int, request: Request, session_data: SessionData = Depends(verifier)):
     response = requests.delete(
         f"http://localhost:8001/schedule/{session_data.student_id}/{schedule_id}"
     )
-    return Response(status_code=response.status_code)
+    return get_timetable(request, session_data)

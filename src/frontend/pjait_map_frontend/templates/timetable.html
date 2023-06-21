@@ -26,7 +26,7 @@
         <div class="activity-row">
 	    <div class="activity-name">{{ subject.name }} {{ schedule.start }}-{{ schedule.end }} in {{ room.name }}</div>
           <div class="action-buttons">
-            <button class="action-button" onclick="deleteActivity({{ schedule.id }})"><span>&times;</span></button>
+            <button class="action-button" action="/timetable/{{ schedule.id }}" method="DELETE"><span>&times;</span></button>
           </div>
         </div>
         {% endfor %}
@@ -36,29 +36,44 @@
     </div>
   </main>
   <div id="popup" class="popup">
-    <h2>Enter Details</h2>
-    <form onsubmit="submitForm(event)">
-      <label for="start">Start:</label>
-      <input type="time" id="start" required><br>
 
-      <label for="end">End:</label>
-      <input type="time" id="end" required><br>
-
-      <label for="room">Room:</label>
-      <select id="room" required>
-      	{% for room in rooms %}
-          <option value="{{ room.id }}">{{ room.name }}</option>
-	      {% endfor %}
-      </select><br>
-      <label for="subject">Subject:</label>
-      <select id="subject" required>
-      	{% for subject in subjects %}
-          <option value="{{ subject.id }}">{{ subject.name }}</option>
-	      {% endfor %}
-      </select><br>
-
-      <button type="submit">Submit</button>
+    <form class="form" action="/timetable" method="POST">
+      <div class="form-group">
+        <label class="form-label" for="subject_id">Subject ID</label>
+        <select id="subject_id" name="subject_id" required>
+          {% for subject in subjects %}
+            <option value="{{ subject.id }}">{{ subject.name }}</option>
+          {% endfor %}
+        </select><br>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="room_id">Room ID</label>
+        <select id="room_id" name="room_id" required>
+          {% for room in rooms %}
+            <option value="{{ room.id }}">{{ room.name }}</option>
+          {% endfor %}
+        </select><br>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="weekday">Weekday</label>
+        <select id="weekday" name="weekday" required>
+          {% for day in range(5) %}
+            <option value="{{ day }}">{{ day }}</option>
+          {% endfor %}
+        </select><br>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="start">Start</label>
+        <input class="time" type="time" id="start" name="start" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="end">End</label>
+        <input class="time" type="time" id="end" name="end" required>
+      </div>
+      <button class="form-button" type="submit">Create</button>
     </form>
+    
+    
   </div>
 </body>
 </html>
