@@ -23,7 +23,7 @@ async def get_schedule(
     schedules = [
         jsonable_encoder(
             Schedule(
-                subject_id=s.id,
+                subject_id=s.subject_id,
                 room_id=s.room_id,
                 weekday=get_weekday(s.start),
                 start=get_time(s.start),
