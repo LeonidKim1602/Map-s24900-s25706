@@ -26,8 +26,8 @@
     	<div class="container">
     		<div class="sidebar">
       			<div class="schedule-text">Schedule Today</div>
-      				{% for subject, location in subjects_today %}
-      					<ul><button class="subject-list" onclick="displayImage('{{ location.file }}', {{ location.pos.x }}, {{ location.pos.y }})">{{ subject.start }}</button></ul>
+      				{% for schedule, location, subject in subjects_today %}
+				<ul><button class="subject-list" onclick="displayImage('{{ location.file }}', {{ location.pos.x }}, {{ location.pos.y }})">{{ subject.name }}<br>{{ schedule.start }}-{{ schedule.end }}</button></ul>
       				{% endfor %}
           </div>
   		</div>
