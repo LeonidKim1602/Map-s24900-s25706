@@ -1,27 +1,34 @@
 // static/scripts.js
-function openPopup(action, data) {
-  const popup = document.getElementById("popup");
-  const popupTitle = document.getElementById("popup-title");
-  const popupForm = document.getElementById("popup-form");
+function openPopup() {
+document.getElementById("popup").style.display = "block";
+}
 
-  if (action === "add") {
-    popupTitle.textContent = "Add Activity";
-    popupForm.setAttribute("action", "/add_activity");
-  } else if (action === "edit") {
-    popupTitle.textContent = "Edit Activity";
-    popupForm.setAttribute("action", "/edit_activity");
-  }
+function submitForm(event) {
+	event.preventDefault(); // Prevent form submission
 
-  // Set values in form fields for editing
-  if (data) {
-    document.getElementById("activity-id").value = data.id;
-    document.getElementById("activity-name").value = data.name;
-  } else {
-    // Reset form fields for adding
-    popupForm.reset();
-  }
+	// Get input values
+	var start = document.getElementById("start").value;
+	var end = document.getElementById("end").value;
+	var room = document.getElementById("room").value;
+	var subject = document.getElementById("subject").value;
 
-  popup.style.display = "block";
+	// Create JSON object
+	var data = {
+	start: start,
+	end: end,
+	room: room,
+	subject: subject
+	};
+
+	// Send data as JSON (example: display in console)
+	console.log(JSON.stringify(data));
+
+	// Reset form and close popup
+	document.getElementById("start").value = "";
+	document.getElementById("end").value = "";
+	document.getElementById("room").value = "";
+	document.getElementById("subject").value = "";
+	document.getElementById("popup").style.display = "none";
 }
 
 function closePopup() {
@@ -29,16 +36,17 @@ function closePopup() {
   popup.style.display = "none";
 }
 
-function addActivity(dayId) {
+function addActivity(studentId) {
   openPopup("add");
   document.getElementById("day-id").value = dayId;
 }
 
-function editActivity(activityId) {
+function editActivity() {
   // Fetch activity data using activityId and pass it to openPopup function
   // Then open the popup for editing
-  const data = fetch(`/get_activity/${activityId}`)
-    .then((response) => response.json())
+  const data = fetch(`http://127.0.0.1:8001/schedule/`, {
+      method: "PUT",
+    })
     .then((data) => {
       openPopup("edit", data);
     })
@@ -47,21 +55,12 @@ function editActivity(activityId) {
     });
 }
 
-function deleteActivity(activityId) {
-  if (confirm("Are you sure you want to delete this activity?")) {
+function deleteActivity(studentId, scheduleId) {
+  if (confirm("Are you sure you want to delete this class?")) {
     // Send delete request using activityId
-    fetch(`/delete_activity/${activityId}`, {
+    fetch(`http://127.0.0.1:8001/schedule/${studentId}/${scheduleId}`, {
       method: "DELETE",
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Success:", data);
-        // Refresh the page or remove the deleted activity from the DOM
-        location.reload();
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+    }).then(r => location.reload());
   }
 }
 

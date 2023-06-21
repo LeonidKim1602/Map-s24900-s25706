@@ -6,33 +6,36 @@
   <script src="/static/main.js"></script>
 </head>
 <body>
+
   <header>
     <div class="header-content">
       <h1 class="logo"><a href="/">Logo</a></h1>
-      
+
       <div class="buttons-container">
-        <button class="profile-button"><a href="/timetable"><span></span>Profile</a></button>
-        <button class="logout-button"><span></span>Logout</button>
+        <a href="/timetable"><button class="profile-button">Profile</button></a>
+        <a href="/logout"><button class="logout-button"><span></span>Logout</button></a>
       </div>
     </div>
   </header>
 
   <div class="content">
-    <h1>Your next class is in...</h1>
-    <div class="map-image">
-    </div>
+    <h1>Chosen class:</h1>
+    <div class="container">
+    	<div class="map-image" id="map-image">
+    	</div>
+    	<div class="container">
+    		<div class="sidebar">
+      			<div class="schedule-text">Schedule Today</div>
+      				{% for subject, location in subjects_today %}
+      					<ul><button class="subject-list" onclick="displayImage('{{ location.file }}', {{ location.pos.x }}, {{ location.pos.y }})">{{ subject.start }}</button></ul>
+      				{% endfor %}
+          </div>
+  		</div>
+    	</div>
   </div>
 
-  <div class="container">
-    <div class="sidebar">
-      <div class="schedule-text">Schedule Today</div>
-      {% for subject, location in subjects_today %}
-      <ul id="subject-list"><button onclick="displayImage('{{ location.file }}')">{{ subject.name }}</button></ul>
-      {% endfor %}
-    </div>
-  </div>
+
 
 
 </body>
 </html>
-

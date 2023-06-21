@@ -11,8 +11,8 @@
     <div class="header-content">
       <h1 class="logo"><a href="/">Schedule</a></h1>
       <div class="buttons-container">
-        <button class="profile-button"><span></span>Profile</button>
-        <button class="logout-button"><span></span>Logout</button>
+        <a href="/timetable"><button class="profile-button">Profile</button></a>
+        <a href="/logout"><button class="logout-button"><span></span>Logout</button></a>
       </div>
     </div>
   </header>
@@ -24,9 +24,8 @@
         <h2 class="day-title">{{ weekday }}</h2>
         {% for schedule in day %}
         <div class="activity-row">
-          <div class="activity-name">{{ schedule.name }}</div>
+          <div class="activity-name">{{ schedule.start, schedule.subject_id }}</div>
           <div class="action-buttons">
-            <button class="action-button" onclick="editActivity({{ schedule.id }})"><span>&#9998;</span></button>
             <button class="action-button" onclick="deleteActivity({{ schedule.id }})"><span>&times;</span></button>
           </div>
         </div>
@@ -36,6 +35,31 @@
       {% endfor %}
     </div>
   </main>
+  <div id="popup" class="popup">
+    <h2>Enter Details</h2>
+    <form onsubmit="submitForm(event)">
+      <label for="start">Start:</label>
+      <input type="time" id="start" required><br>
+
+      <label for="end">End:</label>
+      <input type="time" id="end" required><br>
+
+      <label for="room">Room:</label>
+      <select id="room" required>
+      	{% for room in rooms %}
+        <option value="{{ room.id }}">{{ room.name }}</option>
+	{% endfor %}
+      </select><br>
+
+      <label for="subject">Subject:</label>
+      <select id="subject" required>
+      	{% for subject in subjects %}
+        <option value="{{ subject.id }}">{{ subject.name }}</option>
+	{% endfor %}
+      </select><br>
+
+      <button type="submit">Submit</button>
+    </form>
+  </div>
 </body>
 </html>
-
