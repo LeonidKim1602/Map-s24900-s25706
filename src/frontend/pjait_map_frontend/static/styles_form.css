@@ -102,3 +102,10 @@ main {
   font-weight: bold;
   margin-bottom: 10px;
 }
+
+.message {
+  color: green;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+

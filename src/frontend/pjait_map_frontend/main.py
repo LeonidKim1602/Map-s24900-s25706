@@ -60,6 +60,26 @@ async def login(
 def signup(request: Request) -> HTMLResponse:
     return templates.TemplateResponse("signup.html", {"request": request})
 
+@app.post("/signup", response_class=HTMLResponse)
+async def signup(
+    username: Annotated[str, Form()], password: Annotated[str, Form()], name: Annotated[str, Form()], surname: Annotated[str, Form()], request: Request
+) -> Response:
+    request_user = User(number=int(username[1:]), password=password)
+    request_create = CreateUser(number=int(username[1:]), password=password, name = name, surname = surname)
+    response = requests.post("http://localhost:8001/student", json=request_user.dict())
+    if response.status_code == 403:
+        error_message = "User already exists"
+        return templates.TemplateResponse(
+        "signup.html",
+        {"request": request, "error_message": error_message}
+        )
+
+    response_create = requests.post("http://localhost:8001/student/new", json=request_create.dict())
+    message = "User created"
+    return templates.TemplateResponse(
+    "signup.html",
+    {"request": request, "message": message}
+    )
 
 # @app.post("/signup", response_class=HTMLResponse)
 # async def signup(username: Annotated[str, Form()], password: Annotated[str, Form()], name: Annotated[str, Form()], surname: Annotated[str, Form()], request: Request) -> Response:
@@ -85,6 +105,7 @@ async def index(request: Request, session_data: SessionData | None = Depends(ver
     )
     response_schedules = parse_raw_as(list[Schedule], response.text)
     weekday = datetime.datetime.today().weekday()
+    user = session_data.student_id
 
     today = [s for s in response_schedules if s.weekday == weekday]
     locations = []
@@ -100,9 +121,8 @@ async def index(request: Request, session_data: SessionData | None = Depends(ver
     subjects_today = zip(today, locations, subjects)
 
     return templates.TemplateResponse(
-        "main.html", {"request": request, "subjects_today": subjects_today}
+        "main.html", {"request": request, "subjects_today": subjects_today, "user": user}
     )
-    # await delete_session(response, session_id)
 
 
 @app.get("/logout", dependencies=[Depends(cookie)])
@@ -156,6 +176,12 @@ def timetable(request: Request, session_data: SessionData | None = Depends(verif
         },
     )
 
+@app.post("/timetable", dependencies=[Depends(cookie)])
+def timetable(subject_id: Annotated[str, Form()], room_id: Annotated[str, Form()], weekday: Annotated[str, Form()] , start: Annotated[str, Form()], end: Annotated[str, Form()], request: Request, session_data: SessionData | None = Depends(verifier)):
+    request = NewSchedule(student_id = session_data.student_id, subject_id = int(subject_id), room_id = int(room_id), weekday = int(weekday), start = int(start), end = int(end))
+    response = requests.post("http://localhost:8001/schedule", json=request.dict())
+    
+    return RedirectResponse("/login")
 
 @app.delete("/timetable/{schedule_id}", dependencies=[Depends(cookie)])
 def timetable(
