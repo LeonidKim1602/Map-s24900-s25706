@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 
 import crud
 from dependencies import DatabaseManager, get_weekday, get_time
-from pjait_map_common.schemas import Schedule, NewSchedule, ScheduleChange
+from pjait_map_common.schemas import NewSchedule, ScheduleData
 
 
 router = APIRouter(prefix="/schedule", dependencies=[Depends(DatabaseManager.get_db)])
@@ -22,7 +22,8 @@ async def get_schedule(
 
     schedules = [
         jsonable_encoder(
-            Schedule(
+            ScheduleData(
+                schedule_id=s.id,
                 subject_id=s.subject_id,
                 room_id=s.room_id,
                 weekday=get_weekday(s.start),
@@ -40,14 +41,24 @@ async def get_schedule(
 async def add_schedule(
     data: NewSchedule, db: Session = Depends(DatabaseManager.get_db)
 ) -> Response:
+    if crud.get_student(data.student_id, db) is None:
+        return Response(status_code=400)
+
     crud.add_schedule(data, db)
     return Response(status_code=201)
 
 
 @router.put("/")
 async def update_schedule(
-    data: ScheduleChange, db: Session = Depends(DatabaseManager.get_db)
+    data: ScheduleData, db: Session = Depends(DatabaseManager.get_db)
 ) -> Response:
+
+    student = crud.get_student(data.student_id, db)
+    schedule = crud.get_schedule(data.schedule_id, db)
+
+    if student is None or schedule is None:
+        return Response(status_code=400)
+
     crud.update_schedule(data, db)
     return Response(status_code=201)
 

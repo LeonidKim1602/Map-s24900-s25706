@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from dependencies import to_seconds
 from models import Schedule, Subject, Student, Room
-from pjait_map_common.schemas import NewSchedule, ScheduleChange
+from pjait_map_common.schemas import NewSchedule, ScheduleData
 
 
 def get_schedule(id: int, db: Session) -> Schedule | None:
@@ -32,9 +32,9 @@ def add_schedule(data: NewSchedule, db: Session) -> Schedule:
     return schedule
 
 
-def update_schedule(data: ScheduleChange, db: Session) -> Schedule | None:
-    start = to_seconds(data.schedule.weekday, data.schedule.start)
-    end = to_seconds(data.schedule.weekday, data.schedule.end)
+def update_schedule(data: ScheduleData, db: Session) -> Schedule | None:
+    start = to_seconds(data.weekday, data.start)
+    end = to_seconds(data.weekday, data.end)
 
     schedule = db.get(Schedule, data.schedule_id)
 
@@ -43,10 +43,10 @@ def update_schedule(data: ScheduleChange, db: Session) -> Schedule | None:
 
     schedule.start = start
     schedule.end = end
-    schedule.subject_id = data.schedule.subject_id
-    schedule.subject = db.get(Subject, data.schedule.subject_id)
-    schedule.room_id = data.schedule.room_id
-    schedule.room = db.get(Room, data.schedule.room_id)
+    schedule.subject_id = data.subject_id
+    schedule.subject = db.get(Subject, data.subject_id)
+    schedule.room_id = data.room_id
+    schedule.room = db.get(Room, data.room_id)
 
     db.commit()
 
