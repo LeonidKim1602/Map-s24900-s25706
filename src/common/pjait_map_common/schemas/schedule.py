@@ -14,6 +14,5 @@ class NewSchedule(BaseModel):
     schedule: Schedule
 
 
-class ScheduleChange(BaseModel):
+class ScheduleData(Schedule):
     schedule_id: int
-    schedule: Schedule
