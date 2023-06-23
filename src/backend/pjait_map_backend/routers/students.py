@@ -1,9 +1,11 @@
 from fastapi import APIRouter, Depends, Response
+from fastapi.encoders import jsonable_encoder
+from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 import crud
 from dependencies import DatabaseManager
-from pjait_map_common.schemas import User, CreateUser
+from pjait_map_common.schemas import User, CreateUser, UserData
 
 
 router = APIRouter(prefix="/student", dependencies=[Depends(DatabaseManager.get_db)])
@@ -21,7 +23,10 @@ async def get_student(
     if student.password != user.password:
         return Response(status_code=401)
 
-    return Response(status_code=200)
+    user_data = UserData(number=student.number, name=student.name, surname=student.surname)
+
+
+    return JSONResponse(content=jsonable_encoder(user_data))
 
 
 @router.post("/new")
