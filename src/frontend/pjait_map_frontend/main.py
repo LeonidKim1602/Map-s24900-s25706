@@ -133,7 +133,7 @@ def find_by_id(l: list[Any], id: int) -> Any | None:
             return e
     return None
 
-
+@app.post("/timetable", dependencies=[Depends(cookie)])
 @app.get("/timetable", dependencies=[Depends(cookie)])
 def get_timetable(
     request: Request, session_data: SessionData | None = Depends(verifier)
@@ -162,19 +162,21 @@ def get_timetable(
         days.append(l)
 
     days_of_the_week = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+    indices = [0, 1, 2, 3, 4]
 
     return templates.TemplateResponse(
         "timetable.html",
         {
             "request": request,
             "days": zip(days, days_of_the_week),
+            "week": zip(indices,days_of_the_week),
             "subjects": response_subjects,
             "rooms": response_rooms,
         },
     )
 
 
-@app.post("/timetable", dependencies=[Depends(cookie)])
+@app.post("/timetable/{x}", dependencies=[Depends(cookie)])
 def new_timetable(
     subject_id: Annotated[str, Form()],
     room_id: Annotated[str, Form()],
@@ -195,7 +197,7 @@ def new_timetable(
 
     response = requests.post("http://localhost:8001/schedule/", json=request_data.dict())
     
-    return get_timetable(request, session_data)
+    return RedirectResponse("/timetable")
 
 
 @app.delete("/timetable/{schedule_id}",  dependencies=[Depends(cookie)])
