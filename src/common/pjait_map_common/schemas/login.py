@@ -9,3 +9,8 @@ class User(BaseModel):
 class CreateUser(User):
     name: str
     surname: str
+
+class UserData(BaseModel):
+    number: int
+    name: str
+    surname: str
