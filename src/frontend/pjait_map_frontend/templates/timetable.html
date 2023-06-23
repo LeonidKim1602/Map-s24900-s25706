@@ -24,7 +24,7 @@
         <h2 class="day-title">{{ weekday }}</h2>
         {% for schedule, room, subject in day %}
         <div class="activity-row">
-	    <div class="activity-name">{{ schedule.schedule_id }}  {{ subject.name }} {{ schedule.start }}-{{ schedule.end }} in {{ room.name }}</div>
+	    <div class="activity-name">{{ subject.name }} {{ schedule.start }}-{{ schedule.end }} in {{ room.name }}</div>
           <div class="action-buttons">
             <button class="action-button" onclick="deleteActivity('{{ schedule.schedule_id }}')"><span>&times;</span></button>
           </div>

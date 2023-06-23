@@ -73,7 +73,7 @@ async def signup(
     request_create = CreateUser(
         number=int(username[1:]), password=password, name=name, surname=surname
     )
-    response = requests.post("http://localhost:8001/student", json=request_user.dict())
+    response = requests.post("http://localhost:8001/student/", json=request_user.dict())
     if response.status_code == 403:
         error_message = "User already exists"
         return templates.TemplateResponse(
@@ -193,7 +193,7 @@ def new_timetable(
     )
     request_data = NewSchedule(student_id=session_data.student_id, schedule=schedule)
 
-    response = requests.post("http://localhost:8001/schedule", json=request_data.dict())
+    response = requests.post("http://localhost:8001/schedule/", json=request_data.dict())
     
     return get_timetable(request, session_data)
 
