@@ -199,8 +199,9 @@ def new_timetable(
 
 
 @app.delete("/timetable/{schedule_id}",  dependencies=[Depends(cookie)])
-def delete_timetable(schedule_id: int, request: Request, session_data: SessionData = Depends(verifier)):
+def delete_timetable(schedule_id: int, session_data: SessionData = Depends(verifier)):
     response = requests.delete(
         f"http://localhost:8001/schedule/{session_data.student_id}/{schedule_id}"
     )
-    return RedirectResponse("/timetable")
+
+    return Response(status_code=200)
