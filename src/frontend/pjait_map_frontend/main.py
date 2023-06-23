@@ -147,7 +147,7 @@ def get_timetable(
     response_s = requests.get(f"http://localhost:8001/subject/")
     response_r = requests.get(f"http://localhost:8001/room/")
 
-    response_schedules = parse_raw_as(list[Schedule], response.text)
+    response_schedules = parse_raw_as(list[ScheduleData], response.text)
     response_subjects = parse_raw_as(list[Subject], response_s.text)
     response_rooms = parse_raw_as(list[Room], response_r.text)
 
@@ -194,7 +194,7 @@ def new_timetable(
     request_data = NewSchedule(student_id=session_data.student_id, schedule=schedule)
 
     response = requests.post("http://localhost:8001/schedule", json=request_data.dict())
-
+    
     return get_timetable(request, session_data)
 
 
@@ -203,4 +203,4 @@ def delete_timetable(schedule_id: int, request: Request, session_data: SessionDa
     response = requests.delete(
         f"http://localhost:8001/schedule/{session_data.student_id}/{schedule_id}"
     )
-    return get_timetable(request, session_data)
+    return RedirectResponse("/timetable")

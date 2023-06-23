@@ -15,9 +15,23 @@ function addActivity(dayId) {
 }
 
 
-function deleteActivity(studentId, scheduleId) {
-  if (confirm("Are you sure you want to delete this class?")) {
 
-  }
+function deleteActivity(scheduleId) {
+  // Send a DELETE request to the server to delete the schedule
+  fetch(`/timetable/${scheduleId}`, {
+    method: 'DELETE',
+  })
+  .then(response => {
+    if (response.ok) {
+      // Refresh the page after successful deletion
+      location.reload();
+    } else {
+      // Handle error response
+      console.error('Failed to delete schedule:', response.statusText);
+    }
+  })
+  .catch(error => {
+    // Handle network or other errors
+    console.error('An error occurred while deleting the schedule:', error);
+  });
 }
-
