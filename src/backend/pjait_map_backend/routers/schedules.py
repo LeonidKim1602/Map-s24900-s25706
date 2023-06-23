@@ -63,7 +63,7 @@ async def update_schedule(
     return Response(status_code=201)
 
 
-@router.delete("/{studend_id}/{schedule_id}")
+@router.delete("/{student_id}/{schedule_id}")
 async def delete_schedule(
     student_id: int, schedule_id: int, db: Session = Depends(DatabaseManager.get_db)
 ) -> Response:
