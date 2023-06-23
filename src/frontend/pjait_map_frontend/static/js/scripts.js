@@ -35,3 +35,8 @@ function deleteActivity(scheduleId) {
     console.error('An error occurred while deleting the schedule:', error);
   });
 }
+
+
+
+
+

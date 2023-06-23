@@ -37,7 +37,7 @@
   </main>
   <div id="popup" class="popup">
 
-    <form class="form" action="/timetable" method="POST">
+    <form id="timetable-form" class="form" action="/timetable/x" method="POST">
       <div class="form-group">
         <label class="form-label" for="subject_id">Subject ID</label>
         <select id="subject_id" name="subject_id" required>
@@ -57,11 +57,11 @@
       <div class="form-group">
         <label class="form-label" for="weekday">Weekday</label>
         <select id="weekday" name="weekday" required>
-          {% for day in range(5) %}
-            <option value="{{ day }}">{{ day }}</option>
+          {% for index, weekday in week %}
+            <option value="{{ index }}">{{ weekday }}</option>
           {% endfor %}
         </select><br>
-      </div>
+      </div>        
       <div class="form-group">
         <label class="form-label" for="start">Start</label>
         <input class="time" type="time" id="start" name="start" required>
@@ -70,7 +70,7 @@
         <label class="form-label" for="end">End</label>
         <input class="time" type="time" id="end" name="end" required>
       </div>
-      <button class="form-button" type="submit">Create</button>
+      <button class="form-button" onclick="sendDataAndReload(x)">Create</button>
     </form>
     
     
