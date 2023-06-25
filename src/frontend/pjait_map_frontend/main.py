@@ -29,7 +29,7 @@ async def login(
     username: Annotated[str, Form()], password: Annotated[str, Form()], request: Request
 ) -> Response:
     request_user = User(number=int(username[1:]), password=password)
-    response = requests.post("http://localhost:8001/student", json=request_user.dict())
+    response = requests.post("http://localhost:8001/student/", json=request_user.dict())
 
     if response.status_code == 200:
         user_data = parse_raw_as(UserData, response.text)
