@@ -9,6 +9,8 @@ from fastapi_sessions.frontends.implementations import SessionCookie, CookiePara
 
 class SessionData(BaseModel):
     student_id: int
+    name: str
+    surname: str
 
 
 cookie_params = CookieParameters()

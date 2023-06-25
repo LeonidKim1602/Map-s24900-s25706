@@ -32,8 +32,8 @@ async def login(
     response = requests.post("http://localhost:8001/student", json=request_user.dict())
 
     if response.status_code == 200:
-        print("Ok")
-        data = SessionData(student_id=request_user.number)
+        user_data = parse_raw_as(UserData, response.text)
+        data = SessionData(student_id=user_data.number, name=user_data.name, surname=user_data.surname)
         response = RedirectResponse("/")
 
         await create_session(response, data)
@@ -99,7 +99,6 @@ async def index(request: Request, session_data: SessionData | None = Depends(ver
     )
     response_schedules = parse_raw_as(list[Schedule], response.text)
     weekday = datetime.datetime.today().weekday()
-    user = session_data.student_id
 
     today = [s for s in response_schedules if s.weekday == weekday]
     locations = []
@@ -116,7 +115,7 @@ async def index(request: Request, session_data: SessionData | None = Depends(ver
 
     return templates.TemplateResponse(
         "main.html",
-        {"request": request, "subjects_today": subjects_today, "user": user, "backend": "http://127.0.0.1:8001"},
+        {"request": request, "subjects_today": subjects_today, "user": session_data, "backend": "http://127.0.0.1:8001"},
     )
 
 
