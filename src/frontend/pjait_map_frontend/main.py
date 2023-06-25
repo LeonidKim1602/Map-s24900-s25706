@@ -116,7 +116,7 @@ async def index(request: Request, session_data: SessionData | None = Depends(ver
 
     return templates.TemplateResponse(
         "main.html",
-        {"request": request, "subjects_today": subjects_today, "user": user},
+        {"request": request, "subjects_today": subjects_today, "user": user, "backend": "http://127.0.0.1:8001"},
     )
 
 

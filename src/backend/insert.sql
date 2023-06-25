@@ -1,11 +1,11 @@
 PRAGMA foreign_keys=OFF;
 BEGIN TRANSACTION;
 
-INSERT INTO File VALUES(0,'http://127.0.0.1:8001/img/A0.png');
-INSERT INTO File VALUES(1,'http://127.0.0.1:8001/img/A1.png');
-INSERT INTO File VALUES(2,'http://127.0.0.1:8001/img/A2.png');
-INSERT INTO File VALUES(3,'http://127.0.0.1:8001/img/A3.png');
-INSERT INTO File VALUES(4,'http://127.0.0.1:8001/img/A4.png');
+INSERT INTO File VALUES(0,'img/A0.png');
+INSERT INTO File VALUES(1,'img/A1.png');
+INSERT INTO File VALUES(2,'img/A2.png');
+INSERT INTO File VALUES(3,'img/A3.png');
+INSERT INTO File VALUES(4,'img/A4.png');
 
 INSERT INTO Location VALUES(0,780,160,0);
 INSERT INTO Location VALUES(152,408,125,1);
