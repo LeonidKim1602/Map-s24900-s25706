@@ -31,7 +31,7 @@ async def get_schedule(
                 end=get_time(s.end),
             )
         )
-        for s in student.schedules
+        for s in sorted(student.schedules, key=lambda s: s.start)
     ]
 
     return JSONResponse(content=schedules)
