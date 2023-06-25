@@ -1,8 +1,8 @@
 from sqlalchemy import delete
 from sqlalchemy.orm import Session
 
-from dependencies import to_seconds
-from models import Schedule, Subject, Student, Room
+from pjait_map_backend.dependencies import to_seconds
+from pjait_map_backend.models import Schedule, Subject, Student, Room
 from pjait_map_common.schemas import NewSchedule, ScheduleData
 
 

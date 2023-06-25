@@ -1,7 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from models import Subject
+from pjait_map_backend.models import Subject
 
 
 def get_subject(id: int, db: Session) -> Subject | None:

@@ -3,8 +3,8 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
-import crud
-from dependencies import DatabaseManager
+import pjait_map_backend.crud as crud
+from pjait_map_backend.dependencies import DatabaseManager
 from pjait_map_common.schemas import User, CreateUser, UserData
 
 
@@ -23,8 +23,9 @@ async def get_student(
     if student.password != user.password:
         return Response(status_code=401)
 
-    user_data = UserData(number=student.number, name=student.name, surname=student.surname)
-
+    user_data = UserData(
+        number=student.number, name=student.name, surname=student.surname
+    )
 
     return JSONResponse(content=jsonable_encoder(user_data))
 

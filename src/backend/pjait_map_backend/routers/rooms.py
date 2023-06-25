@@ -3,8 +3,8 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
-import crud
-from dependencies import DatabaseManager
+import pjait_map_backend.crud as crud
+from pjait_map_backend.dependencies import DatabaseManager
 from pjait_map_common.schemas import ClassLocation, Position, Room
 
 

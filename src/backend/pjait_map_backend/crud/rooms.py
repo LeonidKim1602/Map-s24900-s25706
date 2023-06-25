@@ -1,7 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from models import Room
+from pjait_map_backend.models import Room
 
 
 def get_rooms(db: Session) -> list[Room]:

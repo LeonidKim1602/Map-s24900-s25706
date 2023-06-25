@@ -3,8 +3,13 @@ import os
 from fastapi import Depends, FastAPI
 from fastapi.staticfiles import StaticFiles
 
-from dependencies import DatabaseManager
-from routers import schedule_router, room_router, subject_router, student_router
+from pjait_map_backend.dependencies import DatabaseManager
+from pjait_map_backend.routers import (
+    schedule_router,
+    room_router,
+    subject_router,
+    student_router,
+)
 
 
 app = FastAPI(dependencies=[Depends(DatabaseManager.get_db)])

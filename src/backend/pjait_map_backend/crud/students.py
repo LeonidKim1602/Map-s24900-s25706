@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from models import Student
+from pjait_map_backend.models import Student
 from pjait_map_common.schemas import CreateUser
 
 

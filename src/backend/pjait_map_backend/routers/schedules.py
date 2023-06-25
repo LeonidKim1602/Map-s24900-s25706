@@ -3,8 +3,8 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
-import crud
-from dependencies import DatabaseManager, get_weekday, get_time
+import pjait_map_backend.crud as crud
+from pjait_map_backend.dependencies import DatabaseManager, get_weekday, get_time
 from pjait_map_common.schemas import NewSchedule, ScheduleData
 
 
@@ -52,7 +52,6 @@ async def add_schedule(
 async def update_schedule(
     data: ScheduleData, db: Session = Depends(DatabaseManager.get_db)
 ) -> Response:
-
     student = crud.get_student(data.student_id, db)
     schedule = crud.get_schedule(data.schedule_id, db)
 
