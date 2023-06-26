@@ -41,7 +41,8 @@ header {
 }
 
 .profile-button,
-.logout-button {
+.logout-button,
+.all-button {
   font-family: 'OCR A Extended', sans-serif;
   background-color: red;
   color: white;
@@ -53,6 +54,11 @@ header {
 
 .logout-button {
   margin-left: 10px;
+}
+
+.all-button{
+  float: left;
+  margin-right: 10px;
 }
 
 .buttons-container {

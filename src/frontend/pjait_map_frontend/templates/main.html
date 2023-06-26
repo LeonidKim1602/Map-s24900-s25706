@@ -9,6 +9,9 @@
 
   <header>
     <div class="header-content">
+      <div class="buttons-container">
+      <button class="all-button" onclick="displayAll()">All maps</button>
+    </div>
 	<h1 class="logo"><a href="/">Logged in as {{ user.name }} {{ user.surname }}</a></h1>
 
       <div class="buttons-container">
@@ -24,6 +27,7 @@
     <div class="container">
     	<div class="map-image" id="map-image">
     	</div>
+      
     	<div class="container">
         <div class="legend">
             <img src="{{ backend }}/img/Legend.png" alt="Legend" id="img">
@@ -36,6 +40,7 @@
           </div>
   		</div>
     	</div>
+      <p id="description"></p>
   </div>
 
 
